@@ -1,0 +1,60 @@
+package org.testeditor.fixture.rest
+
+element type RestEndpoint {
+	interactions = setBaseUrl, createRequest, addHeader, addBasicAuth, addQueryString, 
+		setBody, sendRequest, getStatus, parseResponseBody, parseJsonFromFile, logJson
+}
+
+interaction type setBaseUrl {
+	template = "Set base url to" ${baseUrl}
+	method = RestFixture.setBaseUrl(baseUrl)
+}
+
+interaction type createRequest {
+	template = "Create request to" ${element}
+	method = RestFixture.createRequest(element, locatorStrategy)
+}
+
+interaction type addHeader {
+	template = "Set header" ${header} "to" ${value} "for" ${request}
+	method = RestFixture.addHeader(request, header, value)
+}
+
+interaction type addBasicAuth {
+	template = "Use user" ${user} "and password" ${password} "for" ${request}
+}
+
+interaction type addQueryString {
+	template = "Set query parameter" ${parameter} "to" ${value} "for" ${request}
+	method = RestFixture.addQueryString(request, parameter, value)
+}
+
+interaction type setBody {
+	template = "Set body of" ${request} "to" ${json}
+	method = RestFixture.setBody(request, json)
+}
+
+interaction type sendRequest {
+	template = "Send request" ${request}
+	method = RestFixture.sendRequest(request)
+}
+
+interaction type getStatus {
+	template = "Get status from" ${request}
+	method = RestFixture.getStatus(request)
+}
+
+interaction type parseResponseBody {
+	template = "Get body of" ${response}	
+	method = RestFixture.parseResponseBody(response)
+}
+
+interaction type parseJsonFromFile {
+	template = "Read json from" ${fileName}
+	method = RestFixture.parseJsonFromFile(fileName)
+}
+
+interaction type logJson {
+	template = "Log json" ${json}
+	method = RestFixture.logJson(json)
+}
