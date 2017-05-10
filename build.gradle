@@ -21,7 +21,7 @@ test.testLogging.showStandardStreams = true
 dependencies {
     compile 'org.testeditor.fixture:core-fixture:3.1.0'
     compile 'com.google.code.gson:gson:2.8.0'
-	compile 'com.mashape.unirest:unirest-java:1.4.9'
+    compile 'com.mashape.unirest:unirest-java:1.4.9'
     testCompile 'junit:junit:4.12'
     testCompile 'com.github.tomakehurst:wiremock:2.6.0'
     testCompile 'org.eclipse.xtend:org.eclipse.xtend.lib:2.11.0'
