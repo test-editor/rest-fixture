@@ -22,6 +22,7 @@ interaction type addHeader {
 
 interaction type addBasicAuth {
 	template = "Use user" ${user} "and password" ${password} "for" ${request}
+	method = RestFixture.addBasicAuth(request, user, password)
 }
 
 interaction type addQueryString {
