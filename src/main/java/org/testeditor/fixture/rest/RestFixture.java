@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import com.mashape.unirest.http.HttpMethod;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -79,7 +80,10 @@ public class RestFixture {
 
 	@FixtureMethod
 	public HttpResponse<String> sendRequest(HttpRequest request) throws UnirestException {
-		return request.asString();
+		logger.info("Sending request with method='{}' to url='{}'", request.getHttpMethod(), request.getUrl());
+		HttpResponse<String> response = request.asString();
+		logger.info("Received response with status='{}' and statusText='{}'.", response.getStatus(), response.getStatusText());
+		return response;
 	}
 
 	@FixtureMethod
@@ -89,7 +93,12 @@ public class RestFixture {
 
 	@FixtureMethod
 	public JsonElement parseResponseBody(HttpResponse<String> response) {
-		return new JsonParser().parse(response.getBody()).getAsJsonObject();
+		try {
+			return new JsonParser().parse(response.getBody()).getAsJsonObject();
+		} catch (JsonSyntaxException e) {
+			logger.info("Could not parse response body as Json:\n{}", response.getBody());
+			throw e;
+		}
 	}
 
 	@FixtureMethod
