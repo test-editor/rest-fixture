@@ -1,22 +1,10 @@
 plugins {
     id 'maven'
     id 'java'
-    id 'com.jfrog.bintray' version '1.7.2'
-    id 'net.researchgate.release' version '2.4.1'
+    id 'com.jfrog.bintray' version '1.7.3'
+    id 'net.researchgate.release' version '2.6.0'
     id 'org.xtext.xtend' version '1.0.17'
 }
-
-repositories {
-    jcenter()
-}
-
-group = 'org.testeditor.fixture'
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-// show standard out during test to see logging output
-test.testLogging.showStandardStreams = true
 
 dependencies {
     compile 'org.testeditor.fixture:core-fixture:3.1.0'
@@ -33,7 +21,21 @@ dependencies {
 sourceSets.main.resources.srcDirs = [ "src/main/java" ]
 sourceSets.main.resources.includes = [ "**/*.aml" ]
 
-// TODO code below copied from core-fixture
+/* 
+ * code below copied from core-fixture
+ */
+repositories {
+    jcenter()
+}
+
+group = 'org.testeditor.fixture'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+// show standard out during test to see logging output
+test.testLogging.showStandardStreams = true
+
 jar {
     manifest {
         attributes 'Implementation-Title': "${project.group}.${project.name}",
@@ -42,34 +44,26 @@ jar {
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
-	classifier 'sources'
-	from sourceSets.main.allSource
+    classifier 'sources'
+    from sourceSets.main.allSource
 }
 
 artifacts {
-	archives sourcesJar
+    archives sourcesJar
 }
 
 install {
     repositories.mavenInstaller {
-    	pom.packaging = 'jar'
+        pom.packaging = 'jar'
     }
 }
 
-/*
- * Configure release plugin.
- * Remove tasks "updateVersion" and "commitNewVersion" as we don't want the new SNAPSHOT
- * version commit on the master branch.
- */
-tasks.release.tasks -= ["updateVersion", "commitNewVersion"]
 release {
     preTagCommitMessage = '[release]'
     tagCommitMessage = '[release]'
     newVersionCommitMessage = '[release] new version'
     tagTemplate = 'v${version}'
 }
-
-afterReleaseBuild.dependsOn bintrayUpload
 
 bintray {
     user = System.getenv('BINTRAY_USER')
@@ -80,14 +74,12 @@ bintray {
         repo = 'Fixtures'
         name = project.name
         userOrg = 'test-editor'
-        websiteUrl = 'http://testeditor.org'
-        vcsUrl = "https://github.com/test-editor/${project.name}.git"
         licenses = ['EPL-1.0']
+        vcsUrl = "https://github.com/test-editor/${project.name}.git"
+        version {
+            name = project.version
+            vcsTag = "v$project.version"
+        }
+        websiteUrl = 'http://testeditor.org'
     }
-}
-
-bintrayUpload.doFirst {
-    // Version is changed during release, we need to set the proper version right before uploading
-    versionName = "$project.version"
-    versionVcsTag = "v$project.version"
 }
