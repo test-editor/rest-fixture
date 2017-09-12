@@ -1,7 +1,7 @@
 # rest-fixture
 
 [![License](http://img.shields.io/badge/license-EPL-blue.svg?style=flat)](https://www.eclipse.org/legal/epl-v10.html)
-[![Build Status](https://travis-ci.org/test-editor/rest-fixture.svg?branch=develop)](https://travis-ci.org/test-editor/rest-fixture)
+[![Build Status](https://travis-ci.org/test-editor/rest-fixture.svg?branch=master)](https://travis-ci.org/test-editor/rest-fixture)
 [![Download](https://api.bintray.com/packages/test-editor/Fixtures/rest-fixture/images/download.svg)](https://bintray.com/test-editor/Fixtures/rest-fixture/_latestVersion)
 
 ## Development
