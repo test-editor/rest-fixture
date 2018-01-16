@@ -11,7 +11,6 @@
  * itemis AG
  *******************************************************************************/
 
-
 package org.testeditor.fixture.rest;
 
 import java.io.BufferedReader;
