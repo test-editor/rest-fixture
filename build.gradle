@@ -3,18 +3,18 @@ plugins {
     id 'java'
     id 'com.jfrog.bintray' version '1.7.3'
     id 'net.researchgate.release' version '2.6.0'
-    id 'org.xtext.xtend' version '1.0.17'
+    id 'org.xtext.xtend' version '2.0.1'
 }
 
 dependencies {
-    compile 'org.testeditor.fixture:core-fixture:3.1.0'
+    compile 'org.testeditor.fixture:core-fixture:4.2.+'
 	compile 'com.mashape.unirest:unirest-java:1.4.9'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.google.guava:guava:21.0'
     testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-core:2.3.9'
+    testCompile 'org.mockito:mockito-core:2.23.0'
     testCompile 'com.github.tomakehurst:wiremock:2.6.0'
-    testCompile 'org.eclipse.xtend:org.eclipse.xtend.lib:2.11.0'
+    testCompile 'org.eclipse.xtend:org.eclipse.xtend.lib:2.15.0'
     testCompile 'com.google.truth:truth:0.31'
 }
 
@@ -30,8 +30,8 @@ repositories {
 
 group = 'org.testeditor.fixture'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 1.10
+targetCompatibility = 1.10
 
 // show standard out during test to see logging output
 test.testLogging.showStandardStreams = true

@@ -26,6 +26,7 @@ import java.nio.file.Paths;
 import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testeditor.fixture.core.FixtureException;
 import org.testeditor.fixture.core.interaction.FixtureMethod;
 
 import com.google.common.io.Resources;
@@ -50,12 +51,12 @@ public class RestFixture {
 	private Gson gson = new Gson();
 
 	@FixtureMethod
-	public void setBaseUrl(String baseUrl) {
+	public void setBaseUrl(String baseUrl) throws FixtureException {
 		this.baseUrl = baseUrl;
 	}
 
 	@FixtureMethod
-	public HttpRequest createRequest(String locator, HttpMethod locatorStrategy) {
+	public HttpRequest createRequest(String locator, HttpMethod locatorStrategy) throws FixtureException {
 		switch (locatorStrategy) {
 		case GET:
 		case HEAD:
@@ -66,22 +67,22 @@ public class RestFixture {
 	}
 
 	@FixtureMethod
-	public void addHeader(HttpRequest request, String name, String value) {
+	public void addHeader(HttpRequest request, String name, String value) throws FixtureException {
 		request.header(name, value);
 	}
 
 	@FixtureMethod
-	public void addBasicAuth(HttpRequest request, String username, String password) {
+	public void addBasicAuth(HttpRequest request, String username, String password) throws FixtureException {
 		request.basicAuth(username, password);
 	}
 
 	@FixtureMethod
-	public void addQueryString(HttpRequest request, String name, String value) {
+	public void addQueryString(HttpRequest request, String name, String value) throws FixtureException {
 		request.queryString(name, value);
 	}
 
 	@FixtureMethod
-	public void setBody(HttpRequest request, JsonElement jsonElement) {
+	public void setBody(HttpRequest request, JsonElement jsonElement) throws FixtureException {
 		if (request instanceof HttpRequestWithBody) {
 			String json = gson.toJson(jsonElement);
 			((HttpRequestWithBody) request).body(json);
@@ -92,20 +93,24 @@ public class RestFixture {
 	}
 
 	@FixtureMethod
-	public HttpResponse<String> sendRequest(HttpRequest request) throws UnirestException {
-		logger.info("Sending request with method='{}' to url='{}'", request.getHttpMethod(), request.getUrl());
-		HttpResponse<String> response = request.asString();
-		logger.info("Received response with status='{}' and statusText='{}'.", response.getStatus(), response.getStatusText());
-		return response;
+	public HttpResponse<String> sendRequest(HttpRequest request) throws FixtureException {
+		try {
+			logger.info("Sending request with method='{}' to url='{}'", request.getHttpMethod(), request.getUrl());
+			HttpResponse<String> response = request.asString();
+			logger.info("Received response with status='{}' and statusText='{}'.", response.getStatus(), response.getStatusText());
+			return response;
+		} catch (Exception exception) {
+			throw new FixtureException("Could not retrieve response for request from url '" + request.getUrl() + "'.", exception);
+		}
 	}
 
 	@FixtureMethod
-	public int getStatus(HttpResponse<String> response) {
+	public int getStatus(HttpResponse<String> response) throws FixtureException {
 		return response.getStatus();
 	}
 
 	@FixtureMethod
-	public JsonElement parseResponseBody(HttpResponse<String> response) {
+	public JsonElement parseResponseBody(HttpResponse<String> response) throws FixtureException {
 		try {
 			return new JsonParser().parse(response.getBody()).getAsJsonObject();
 		} catch (JsonSyntaxException e) {
@@ -115,8 +120,9 @@ public class RestFixture {
 	}
 
 	@FixtureMethod
-	public JsonElement parseJsonFromFile(String fileName) throws IOException {
+	public JsonElement parseJsonFromFile(String fileName) throws FixtureException {
 		Path path = Paths.get(fileName);
+		try {
 		if (Files.isRegularFile(path)) {
 			try (BufferedReader reader = Files.newBufferedReader(path, charset)) {
 				return new JsonParser().parse(reader).getAsJsonObject();
@@ -127,10 +133,13 @@ public class RestFixture {
 				return new JsonParser().parse(reader).getAsJsonObject();
 			}
 		}
+		} catch (Exception exception) {
+			throw new FixtureException("File '" + fileName + "' could not be parsed as Json", exception);
+		}
 	}
 
 	@FixtureMethod
-	public void logJson(JsonElement element) {
+	public void logJson(JsonElement element) throws FixtureException {
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		String json = gson.toJson(element);
 		logger.info("Json is:\n{}", json);
