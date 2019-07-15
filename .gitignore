@@ -25,3 +25,4 @@ xtend-gen/
 \#*\#
 .\#*
 .projectile
+.javaTrustStore
